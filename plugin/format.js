@@ -11,9 +11,8 @@ var exec = require('child_process').exec;
       encoding: 'utf8'
     }, function (err, data) {
       if (!err) {
-        console.log(data);
+        console.log(data.replace(/[\r\n]+$/g, ''));
       }
     });
   });
 }).apply(this, (typeof process === 'object' && process.argv.splice(3)));
-
