@@ -6,7 +6,7 @@ var fs = require('fs');
 var exec = require('child_process').exec;
 
 (function (contentPath) {
-  exec('/usr/bin/semistandard "' + contentPath + '" --format', function (e, so, se) {
+  exec('/usr/bin/semistandard "' + contentPath + '" --fix', function (e, so, se) {
     fs.readFile(contentPath, {
       encoding: 'utf8'
     }, function (err, data) {
