@@ -28,7 +28,7 @@ endif
 " Which file types supported vim plugin
 " Default settings for this file types you can see
 " in file plugin/.editorconfig
-let s:supportedFileTypes = ['js']
+let s:supportedFileTypes = ['js', 'python']
 
 "% Helper functions and variables
 let s:plugin_Root_directory = fnamemodify(expand("<sfile>"), ":h")
@@ -186,9 +186,9 @@ function s:treatConfig(config)
   return config
 endfunction
 
-" Метод которые обновляет
-" скриптовой 'приватный' объект
-" конфигурации
+" ÐœÐµÑ‚Ð¾Ð´ ÐºÐ¾Ñ‚Ð¾Ñ€Ñ‹Ðµ Ð¾Ð±Ð½Ð¾Ð²Ð»ÑÐµÑ‚
+" ÑÐºÑ€Ð¸Ð¿Ñ‚Ð¾Ð²Ð¾Ð¹ 'Ð¿Ñ€Ð¸Ð²Ð°Ñ‚Ð½Ñ‹Ð¹' Ð¾Ð±ÑŠÐµÐºÑ‚
+" ÐºÐ¾Ð½Ñ„Ð¸Ð³ÑƒÑ€Ð°Ñ†Ð¸Ð¸
 "
 " param {Dict} value The configuration object.
 " return {Dict} Return copy of configuration obect with link on
@@ -206,7 +206,7 @@ function s:updateConfig(value)
     endif
   endfor
 
-  " Делаем копию объекта
+  " Ð”ÐµÐ»Ð°ÐµÐ¼ ÐºÐ¾Ð¿Ð¸ÑŽ Ð¾Ð±ÑŠÐµÐºÑ‚Ð°
   let b:config_Formatter = config
 
   return b:config_Formatter
@@ -312,14 +312,14 @@ endfunction
 " @return {Number} If apply was success then return '0' else '1'
 function FormatterApplyConfig(...)
 
-  " Получаем путь который нам передали
+  " ÐŸÐ¾Ð»ÑƒÑ‡Ð°ÐµÐ¼ Ð¿ÑƒÑ‚ÑŒ ÐºÐ¾Ñ‚Ð¾Ñ€Ñ‹Ð¹ Ð½Ð°Ð¼ Ð¿ÐµÑ€ÐµÐ´Ð°Ð»Ð¸
   let l:filepath = get(a:000, 0)
 
-  " Проходимся по дефолтным путям только если
-  " оказалось что нам не передали путь
+  " ÐŸÑ€Ð¾Ñ…Ð¾Ð´Ð¸Ð¼ÑÑ Ð¿Ð¾ Ð´ÐµÑ„Ð¾Ð»Ñ‚Ð½Ñ‹Ð¼ Ð¿ÑƒÑ‚ÑÐ¼ Ñ‚Ð¾Ð»ÑŒÐºÐ¾ ÐµÑÐ»Ð¸
+  " Ð¾ÐºÐ°Ð·Ð°Ð»Ð¾ÑÑŒ Ñ‡Ñ‚Ð¾ Ð½Ð°Ð¼ Ð½Ðµ Ð¿ÐµÑ€ÐµÐ´Ð°Ð»Ð¸ Ð¿ÑƒÑ‚ÑŒ
   "
-  " Если нам передали путь то не стоит его
-  " тут проверять на сушествование
+  " Ð•ÑÐ»Ð¸ Ð½Ð°Ð¼ Ð¿ÐµÑ€ÐµÐ´Ð°Ð»Ð¸ Ð¿ÑƒÑ‚ÑŒ Ñ‚Ð¾ Ð½Ðµ ÑÑ‚Ð¾Ð¸Ñ‚ ÐµÐ³Ð¾
+  " Ñ‚ÑƒÑ‚ Ð¿Ñ€Ð¾Ð²ÐµÑ€ÑÑ‚ÑŒ Ð½Ð° ÑÑƒÑˆÐµÑÑ‚Ð²Ð¾Ð²Ð°Ð½Ð¸Ðµ
   if empty(l:filepath)
     let l:filepath = get(filter(copy(s:paths_Editorconfig),'filereadable(v:val)'), 0)
   endif
@@ -402,9 +402,9 @@ func! Formatter(...)
     let tmp_file_Formatter_arg_windows = fnameescape(system("cygpath -w ".tmp_file_Formatter_arg))
     let path_Formatter_arg_windows = fnameescape(system("cygpath -w ".path_Formatter_arg))
 
-    let result = system(engine." ".beautify_absolute_path_windows." --js_arguments ".tmp_file_Formatter_arg_windows." ".opts_Formatter_arg." ".path_Formatter_arg_windows)
+    let result = system(engine." ".beautify_absolute_path_windows." --js_arguments ".tmp_file_Formatter_arg_windows." ".opts_Formatter_arg." ".path_Formatter_arg_windows." ".type)
   elseif executable(engine)
-    let result = system(engine." ".fnameescape(s:plugin_Root_directory."/format.js")." --js_arguments ".tmp_file_Formatter_arg." ".opts_Formatter_arg." ".path_Formatter_arg)
+    let result = system(engine." ".fnameescape(s:plugin_Root_directory."/format.js")." --js_arguments ".tmp_file_Formatter_arg." ".opts_Formatter_arg." ".path_Formatter_arg." ".type)
   else
     " Executable bin doesn't exist
     call ErrorMsg('The '.engine.' is not executable!')
@@ -515,6 +515,15 @@ endfun
 fun! CSSFormat(...)
   return call('Formatter', extend(['css'], a:000))
 endfun
+
+fun! RangePythonFormat() range
+  return call('Formatter', extend(['python'], [a:firstline, a:lastline]))
+endfun
+
+fun! PythonFormat(...)
+  return call('Formatter', extend(['python'], a:000))
+endfun
+
 
 " Check if installed editorconfig plugin
 " then add hook on change
