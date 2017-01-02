@@ -16,8 +16,6 @@ var exec = require('child_process').exec;
     }, function(err, data) {
       if (!err) {
         console.log(data.replace(/[\r\n]+$/g, ''));
-      } else {
-        console.log(err);
       }
     });
   });
