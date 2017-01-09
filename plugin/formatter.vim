@@ -186,9 +186,9 @@ function s:treatConfig(config)
   return config
 endfunction
 
-" ÐœÐµÑ‚Ð¾Ð´ ÐºÐ¾Ñ‚Ð¾Ñ€Ñ‹Ðµ Ð¾Ð±Ð½Ð¾Ð²Ð»ÑÐµÑ‚
-" ÑÐºÑ€Ð¸Ð¿Ñ‚Ð¾Ð²Ð¾Ð¹ 'Ð¿Ñ€Ð¸Ð²Ð°Ñ‚Ð½Ñ‹Ð¹' Ð¾Ð±ÑŠÐµÐºÑ‚
-" ÐºÐ¾Ð½Ñ„Ð¸Ð³ÑƒÑ€Ð°Ñ†Ð¸Ð¸
+" Метод которые обновляет
+" скриптовой 'приватный' объект
+" конфигурации
 "
 " param {Dict} value The configuration object.
 " return {Dict} Return copy of configuration obect with link on
@@ -206,7 +206,7 @@ function s:updateConfig(value)
     endif
   endfor
 
-  " Ð”ÐµÐ»Ð°ÐµÐ¼ ÐºÐ¾Ð¿Ð¸ÑŽ Ð¾Ð±ÑŠÐµÐºÑ‚Ð°
+  " Делаем копию объекта
   let b:config_Formatter = config
 
   return b:config_Formatter
@@ -312,14 +312,14 @@ endfunction
 " @return {Number} If apply was success then return '0' else '1'
 function FormatterApplyConfig(...)
 
-  " ÐŸÐ¾Ð»ÑƒÑ‡Ð°ÐµÐ¼ Ð¿ÑƒÑ‚ÑŒ ÐºÐ¾Ñ‚Ð¾Ñ€Ñ‹Ð¹ Ð½Ð°Ð¼ Ð¿ÐµÑ€ÐµÐ´Ð°Ð»Ð¸
+  " Получаем путь который нам передали
   let l:filepath = get(a:000, 0)
 
-  " ÐŸÑ€Ð¾Ñ…Ð¾Ð´Ð¸Ð¼ÑÑ Ð¿Ð¾ Ð´ÐµÑ„Ð¾Ð»Ñ‚Ð½Ñ‹Ð¼ Ð¿ÑƒÑ‚ÑÐ¼ Ñ‚Ð¾Ð»ÑŒÐºÐ¾ ÐµÑÐ»Ð¸
-  " Ð¾ÐºÐ°Ð·Ð°Ð»Ð¾ÑÑŒ Ñ‡Ñ‚Ð¾ Ð½Ð°Ð¼ Ð½Ðµ Ð¿ÐµÑ€ÐµÐ´Ð°Ð»Ð¸ Ð¿ÑƒÑ‚ÑŒ
+  " Проходимся по дефолтным путям только если
+  " оказалось что нам не передали путь
   "
-  " Ð•ÑÐ»Ð¸ Ð½Ð°Ð¼ Ð¿ÐµÑ€ÐµÐ´Ð°Ð»Ð¸ Ð¿ÑƒÑ‚ÑŒ Ñ‚Ð¾ Ð½Ðµ ÑÑ‚Ð¾Ð¸Ñ‚ ÐµÐ³Ð¾
-  " Ñ‚ÑƒÑ‚ Ð¿Ñ€Ð¾Ð²ÐµÑ€ÑÑ‚ÑŒ Ð½Ð° ÑÑƒÑˆÐµÑÑ‚Ð²Ð¾Ð²Ð°Ð½Ð¸Ðµ
+  " Если нам передали путь то не стоит его
+  " тут проверять на сушествование
   if empty(l:filepath)
     let l:filepath = get(filter(copy(s:paths_Editorconfig),'filereadable(v:val)'), 0)
   endif
