@@ -7,8 +7,13 @@ var exec = require('child_process').exec;
 
 (function(contentPath, options, formatFile, fileType) {
   var cmd = '/usr/bin/semistandard "' + contentPath + '" --fix';
-  if (fileType === 'python') {
-    cmd = '/usr/local/bin/autopep8 --in-place "' + contentPath + '"';
+  if (fileType.substr(0, 6) === 'python') {
+    var params = ['--in-place'];
+    for (var i in fileType.substr(6)) {
+      params.push('--aggressive');
+    }
+    cmd = '/usr/local/bin/autopep8 ' + params.join(' ') + ' "' + contentPath + '"';
+    console.log(cmd);
   }
   exec(cmd, function(e, so, se) {
     fs.readFile(contentPath, {
