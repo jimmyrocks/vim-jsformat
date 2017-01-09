@@ -13,7 +13,6 @@ var exec = require('child_process').exec;
       params.push('--aggressive');
     }
     cmd = '/usr/local/bin/autopep8 ' + params.join(' ') + ' "' + contentPath + '"';
-    console.log(cmd);
   }
   exec(cmd, function(e, so, se) {
     fs.readFile(contentPath, {
