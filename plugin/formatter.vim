@@ -28,7 +28,7 @@ endif
 " Which file types supported vim plugin
 " Default settings for this file types you can see
 " in file plugin/.editorconfig
-let s:supportedFileTypes = ['js', 'python']
+let s:supportedFileTypes = ['js', 'python', 'pythona', 'pythonaa']
 
 "% Helper functions and variables
 let s:plugin_Root_directory = fnamemodify(expand("<sfile>"), ":h")
@@ -522,6 +522,22 @@ endfun
 
 fun! PythonFormat(...)
   return call('Formatter', extend(['python'], a:000))
+endfun
+
+fun! RangePythonFormatAggressive() range
+  return call('Formatter', extend(['pythona'], [a:firstline, a:lastline]))
+endfun
+
+fun! PythonFormatAggressive(...)
+  return call('Formatter', extend(['pythona'], a:000))
+endfun
+
+fun! RangePythonFormatExtraAggressive() range
+  return call('Formatter', extend(['pythonaa'], [a:firstline, a:lastline]))
+endfun
+
+fun! PythonFormatExtraAggressive(...)
+  return call('Formatter', extend(['pythonaa'], a:000))
 endfun
 
 
